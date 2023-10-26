@@ -2,15 +2,19 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import asyncio
+import os
+
+
 
 # Insert your Discord bot token here
-TOKEN = 'MTExMzg4NDk4NjkxMTc3Mjc4Mg.G3Qrtw.2eFSdOgVadghOtNKLG3uy3aVFoaCi-JK4DSLSo'
+TOKEN = os.environ.get("Token")
 
 # Insert the allowed user IDs who can use the commands
+ALLOWED_USER_IDS = os.environ.get('ALLOWED_USER_IDS')
+GENERAL_CHANNEL_ID = os.environ.get('GENERAL_CHANNEL_ID')
+ALLOWED = os.environ.get('ALLOWED')
 
-ALLOWED_USER_IDS = [875045400032211004, 962105910501703720, 769685095719632898]
-ALLOWED = [1134830159652999218, 769685095719632898]
-GENERAL_CHANNEL_ID = 1065179737254797354
+
 
 # Enable the messages intent
 # Initialize the bot with intents
@@ -27,7 +31,6 @@ async def on_ready():
 # Check if the command is invoked in the general channel
 def is_general_channel(ctx):
     return ctx.channel.id == GENERAL_CHANNEL_ID
-
 
 
 @bot.tree.command(name="createclan")
@@ -62,10 +65,6 @@ async def CreateClan(interaction, *, clan_name: str):
     await interaction.response.send_message(f"Clan '{clan_name}' created successfully!")
 
 
-
-
-
-
 @bot.tree.command(name="add")
 @commands.check(is_general_channel)
 async def Add(interaction, *, member: discord.Member, clan_name: str):
@@ -85,7 +84,6 @@ async def Add(interaction, *, member: discord.Member, clan_name: str):
     await interaction.response.send_message(f"Member {member.display_name} added to '{clan_name}'!")
 
 
-
 @bot.tree.command(name="remove")
 @commands.check(is_general_channel)
 async def Remove(interaction, *, member: discord.Member, clan_name: str):
@@ -103,6 +101,7 @@ async def Remove(interaction, *, member: discord.Member, clan_name: str):
     # Remove the member from the clan role
     await member.remove_roles(clan_role)
     await interaction.response.send_message(f"Member {member.display_name} removed from '{clan_name}'!")
+
 
 # Run the bot
 bot.run(TOKEN)
